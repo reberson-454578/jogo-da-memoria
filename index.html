@@ -14,31 +14,37 @@
     />
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
     <style>
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         font-family: "Fredoka One", cursive;
         background: linear-gradient(to right, #ffecd2, #fcb69f);
         margin: 0;
-        padding: 0;
+        padding: 20px;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
         flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
       }
 
       h1 {
         color: #fff;
-        font-size: 3rem;
+        font-size: clamp(2rem, 5vw, 3rem);
         margin-bottom: 10px;
         text-shadow: 2px 2px #00000040;
+        text-align: center;
       }
 
       .controls {
         display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
         flex-wrap: wrap;
         justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 500px;
       }
 
       select,
@@ -52,21 +58,28 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        flex: 1 1 45%;
+        min-width: 140px;
       }
 
       .status-bar {
         display: flex;
-        justify-content: space-between;
-        width: 400px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        width: 100%;
+        max-width: 480px;
         color: #fff;
-        font-size: 1rem;
+        font-size: 1.2rem;
         margin-bottom: 20px;
+        text-align: center;
         text-shadow: 1px 1px #000;
       }
 
       .game-board {
         display: grid;
         gap: 15px;
+        justify-content: center;
         transition: opacity 0.5s ease, transform 0.5s ease;
         opacity: 0;
         transform: scale(0.9);
@@ -78,8 +91,6 @@
       }
 
       .card {
-        width: 80px;
-        height: 80px;
         background: #fff;
         border-radius: 15px;
         display: flex;
@@ -92,6 +103,8 @@
         transition: transform 0.3s;
         transform-style: preserve-3d;
         position: relative;
+        width: 100%;
+        height: 100%;
       }
 
       .card.flip {
@@ -140,6 +153,8 @@
         font-family: "Fredoka One", cursive;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         animation: popUp 0.4s ease;
+        width: 90%;
+        max-width: 400px;
       }
 
       .modal-content h2 {
@@ -154,9 +169,9 @@
 
       .modal-content button {
         padding: 10px 20px;
-        background: #ff6f61;
         display: inline-block;
         text-align: center;
+        background: #ff6f61;
         border: none;
         color: white;
         font-size: 1rem;
@@ -216,6 +231,33 @@
         }
         50% {
           transform: scale(1.15);
+        }
+      }
+
+      /* 🔁 RESPONSIVIDADE: abaixo de 768px (celulares e tablets) */
+      @media (max-width: 768px) {
+        .card {
+          width: 100%;
+          aspect-ratio: 1 / 1;
+          font-size: 2rem;
+        }
+
+        .game-board {
+          grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)) !important;
+          gap: 10px;
+          width: 100%;
+          padding: 0 10px;
+        }
+
+        .controls select,
+        .controls button {
+          font-size: 0.9rem;
+          padding: 8px;
+        }
+
+        .status-bar {
+          gap: 10px;
+          font-size: 0.9rem;
         }
       }
     </style>
@@ -488,8 +530,20 @@
           const emojiPairs = [...selectedEmojis, ...selectedEmojis];
           emojiPairs.sort(() => 0.5 - Math.random());
 
-          board.style.gridTemplateColumns = `repeat(${cols}, 80px)`;
-          board.style.gridTemplateRows = `repeat(${rows}, 80px)`;
+          // RESPONSIVIDADE — tamanho das cartas em telas pequenas
+          const isMobile = window.innerWidth <= 768;
+          if (isMobile) {
+            const cardSize =
+              Math.floor(
+                Math.min(window.innerWidth, window.innerHeight) /
+                  Math.max(cols, rows)
+              ) - 8; // espaço entre cartas
+            board.style.gridTemplateColumns = `repeat(${cols}, ${cardSize}px)`;
+            board.style.gridTemplateRows = `repeat(${rows}, ${cardSize}px)`;
+          } else {
+            board.style.gridTemplateColumns = `repeat(${cols}, 80px)`;
+            board.style.gridTemplateRows = `repeat(${rows}, 80px)`;
+          }
 
           emojiPairs.forEach((emoji) => board.appendChild(createCard(emoji)));
 
