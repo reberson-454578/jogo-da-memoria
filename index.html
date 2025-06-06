@@ -534,7 +534,7 @@
           // RESPONSIVIDADE — tamanho das cartas em telas pequenas
           const isMobile = window.innerWidth <= 768;
           if (isMobile) {
-            const spacing = 8; // espaço entre as cartas
+            const spacing = 10; // espaço entre as cartas
             const controlsHeight = 180; // estimativa da altura ocupada por cabeçalho, botões e status
             const maxAvailableHeight = window.innerHeight - controlsHeight;
 
@@ -546,8 +546,8 @@
             board.style.gridTemplateColumns = `repeat(${cols}, ${cardSize}px)`;
             board.style.gridTemplateRows = `repeat(${rows}, ${cardSize}px)`;
           } else {
-            board.style.gridTemplateColumns = `repeat(${cols}, 75px)`;
-            board.style.gridTemplateRows = `repeat(${rows}, 75px)`;
+            board.style.gridTemplateColumns = `repeat(${cols}, 80px)`;
+            board.style.gridTemplateRows = `repeat(${rows}, 80px)`;
           }
 
           emojiPairs.forEach((emoji) => board.appendChild(createCard(emoji)));
