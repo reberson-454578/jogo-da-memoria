@@ -635,11 +635,27 @@
         if (previewUsed) return;
         previewUsed = true;
         document.getElementById("previewBtn").disabled = true;
+
+        const difficultyValue = document.getElementById("difficulty").value;
+        let previewTime = 3000; // valor padrão (média)
+
+        if (difficultyValue === "4x3" || difficultyValue === "4x4") {
+          previewTime = 2000; // fácil
+        } else if (difficultyValue === "5x4" || difficultyValue === "6x3") {
+          previewTime = 3000; // médio
+        } else if (
+          difficultyValue === "6x4" ||
+          difficultyValue === "6x5" ||
+          difficultyValue === "6x6"
+        ) {
+          previewTime = 4000; // difícil
+        }
+
         const cards = document.querySelectorAll(".card");
         cards.forEach((card) => card.classList.add("flip"));
         setTimeout(() => {
           cards.forEach((card) => card.classList.remove("flip"));
-        }, 1000);
+        }, previewTime);
       }
 
       document
